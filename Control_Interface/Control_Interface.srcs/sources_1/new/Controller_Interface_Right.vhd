@@ -39,7 +39,7 @@ entity Controller_Interface is
         racket_height : integer := 30;
         screen_height : integer := 480
     );
-    Port ( clcok_i : in STD_LOGIC;
+    Port ( clock_i : in STD_LOGIC;
            reset_i : in STD_LOGIC;
            rot_enc_i : in STD_LOGIC_VECTOR (1 downto 0);
            push_but_i : in STD_LOGIC;
@@ -51,7 +51,7 @@ architecture Behavioral of Controller_Interface is
 
 begin
 
-process (clcok_i, reset_i) 
+process (clock_i, reset_i) 
     begin 
         
 
