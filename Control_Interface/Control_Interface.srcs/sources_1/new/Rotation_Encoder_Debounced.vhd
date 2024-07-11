@@ -17,10 +17,9 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,69 +30,78 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Rotation_Encoder_Debounced is
-    Generic (
-        clk_frequency_in_Hz : integer := 125_000_0000; 
-        debounce_time_in_us : integer := 2000
+ENTITY Rotation_Encoder_Debounced IS
+    GENERIC (
+        clk_frequency_in_Hz : INTEGER := 125_000_000;
+        debounce_time_in_us : INTEGER := 2000;
+        active_low : BOOLEAN := true
     );
-    
-    Port ( 
-        clk_i : in std_logic;
-        rst_i : in STD_LOGIC;
-        rot_enc_i : in STD_LOGIC_VECTOR (1 downto 0);
-        rot_enc_debounced : out STD_LOGIC_VECTOR (1 downto 0)
+
+    PORT (
+        clk : IN STD_LOGIC;
+        rst : IN STD_LOGIC;
+        input : IN STD_LOGIC;
+        debounce : OUT STD_LOGIC
     );
-end Rotation_Encoder_Debounced;
+END Rotation_Encoder_Debounced;
 
-architecture Behavioral of Rotation_Encoder_Debounced is
+ARCHITECTURE Behavioral OF Rotation_Encoder_Debounced IS
 
-    signal max_count : integer :=  debounce_time_in_us /((1 / clk_frequency_in_Hz) * 1_000_000); -- max count damit debounce time auf 2000us 
-    signal counter_a : integer := 0;
-    signal counter_b : integer := 0;
-    signal a : std_logic := '0';
-    signal b : std_logic := '0';
 
-begin
+    SIGNAL max_count : INTEGER := debounce_time_in_us /( (clk_frequency_in_Hz) * ( 1 / 1_000_000));
+    SIGNAL counter : INTEGER := 0;
+    SIGNAL sample : STD_LOGIC_VECTOR(9 DOWNTO 0) := "0001111000";
+    SIGNAL sample_rate : STD_LOGIC := '0';
 
-    process(clk_i, rst_i)
-    begin
-        if rst_i = '1' then
-            counter_a <= 0;
-            a <= '0';
-            b <= '0';
-        end if;
-    end process;
-    
-    process(clk_i)
-    begin
-        if rising_edge(clk_i) then
-            if counter_a = max_count then
-            a <= '1';
-            elsif counter_a = 0 then
-            a <= '0';
-            end if;
-            if rot_enc_i(0) = '0' then
-                counter_a <= counter_a + 1;
-            else
-                counter_a <= counter_a - 1;
-            end if;
-        end if;
-    end process;
-    
-    process(clk_i)
-    begin
-        if rising_edge(clk_i) then
-            if counter_b = max_count then
-            b <= '1';
-            elsif counter_b = 0 then
-            b <= '0';
-            end if;
-            if rot_enc_i(1) = '0' then
-                counter_b <= counter_b + 1;
-            else
-                counter_b <= counter_b - 1;
-            end if;
-        end if;
-    end process;
+BEGIN
 
-end Behavioral;
+    PROCESS (clk, rst)
+    BEGIN
+        IF rst = '1' THEN
+            counter <= 0;
+            sample_rate <= '0';
+        ELSIF rising_edge(clk) THEN
+            IF (counter < max_count) THEN
+                counter <= counter + 1;
+                sample_rate <= '0';
+            ELSE
+                counter <= 0;
+                sample_rate <= '1';
+            END IF;
+        END IF;
+    END PROCESS;
+
+    PROCESS (clk, rst) --Sampling Process
+    BEGIN
+        IF rst = '1' THEN
+            sample <= (others => input);
+        ELSIF rising_edge(clk) THEN
+            IF (sample_rate = '1') THEN
+                sample(9 DOWNTO 1) <= sample(8 DOWNTO 0); -- Linksschieben
+                sample(0) <= input;
+            END IF;
+        END IF;
+    END PROCESS;
+
+    PROCESS (clk, rst)
+    BEGIN
+        IF rst = '1' THEN
+            debounce <=  '0';
+        ELSIF rising_edge(clk) THEN
+            IF (active_low) THEN
+                IF (sample = "0000000000") THEN 
+                    debounce <= '1';
+                ELSIF (sample = "1111111111") THEN
+                    debounce <= '0';
+                END IF;
+            ELSE
+                IF (sample = "1111111111") THEN --Aktiv High Konstant-Ausgang
+                    debounce <= '0';
+                ELSIF (sample = "0000000000") THEN
+                    debounce <= '1';
+                END IF;
+            END IF;
+        END IF;
+    END PROCESS;
+
+END Behavioral;
