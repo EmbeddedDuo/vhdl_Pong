@@ -19,7 +19,7 @@
 ----------------------------------------------------------------------------------
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
-use ieee.numeric_std.all;
+USE ieee.numeric_std.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -46,9 +46,8 @@ ENTITY Rotation_Encoder_Debounced IS
 END Rotation_Encoder_Debounced;
 
 ARCHITECTURE Behavioral OF Rotation_Encoder_Debounced IS
+    SIGNAL max_count : INTEGER := (clk_frequency_in_Hz / 1_000_000) * debounce_time_in_us;
 
-
-    SIGNAL max_count : INTEGER := debounce_time_in_us /( (clk_frequency_in_Hz) * ( 1 / 1_000_000));
     SIGNAL counter : INTEGER := 0;
     SIGNAL sample : STD_LOGIC_VECTOR(9 DOWNTO 0) := "0001111000";
     SIGNAL sample_rate : STD_LOGIC := '0';
@@ -74,7 +73,7 @@ BEGIN
     PROCESS (clk, rst) --Sampling Process
     BEGIN
         IF rst = '1' THEN
-            sample <= (others => input);
+            sample <= (OTHERS => input);
         ELSIF rising_edge(clk) THEN
             IF (sample_rate = '1') THEN
                 sample(9 DOWNTO 1) <= sample(8 DOWNTO 0); -- Linksschieben
@@ -86,10 +85,10 @@ BEGIN
     PROCESS (clk, rst)
     BEGIN
         IF rst = '1' THEN
-            debounce <=  '0';
+            debounce <= '0';
         ELSIF rising_edge(clk) THEN
             IF (active_low) THEN
-                IF (sample = "0000000000") THEN 
+                IF (sample = "0000000000") THEN
                     debounce <= '1';
                 ELSIF (sample = "1111111111") THEN
                     debounce <= '0';

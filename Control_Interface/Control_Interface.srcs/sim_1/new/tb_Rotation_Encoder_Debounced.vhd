@@ -4,92 +4,68 @@ USE ieee.std_logic_1164.ALL;
 ENTITY tb_Rotation_Encoder_Debounced IS
 END tb_Rotation_Encoder_Debounced;
 
-ARCHITECTURE behavior OF tb_Rotation_Encoder_Debounced IS 
+ARCHITECTURE behavior OF tb_Rotation_Encoder_Debounced IS
 
     -- Component Declaration for the Unit Under Test (UUT)
     COMPONENT Rotation_Encoder_Debounced
-    GENERIC (
-        clk_frequency_in_Hz : INTEGER := 125_000_000;
-        debounce_time_in_us : INTEGER := 2000;
-        active_low : BOOLEAN := true
-    );
-    PORT(
-        clk : IN std_logic;
-        rst : IN std_logic;
-        input : IN std_logic;
-        debounce : OUT std_logic
-    );
+        GENERIC (
+            clk_frequency_in_Hz : INTEGER := 125_000_000;
+            debounce_time_in_us : INTEGER := 2000;
+            active_low : BOOLEAN := true
+        );
+        PORT (
+            clk : IN STD_LOGIC;
+            rst : IN STD_LOGIC;
+            input : IN STD_LOGIC;
+            debounce : OUT STD_LOGIC
+        );
     END COMPONENT;
-    
+
     -- Testbench signals
-    SIGNAL clk : std_logic := '0';
-    SIGNAL rst : std_logic := '1';
-    SIGNAL input : std_logic := '1';
-    SIGNAL debounce : std_logic;
-    
+    SIGNAL clk : STD_LOGIC := '0';
+    SIGNAL rst : STD_LOGIC := '1';
+    SIGNAL input : STD_LOGIC := '0';
+    SIGNAL debounce : STD_LOGIC;
+
     -- Clock period definition
-    CONSTANT clk_period : time := 8 ns; -- 125 MHz
+    CONSTANT clk_period : TIME := 4 ns; 
 
 BEGIN
 
     -- Instantiate the Unit Under Test (UUT)
-    uut: Rotation_Encoder_Debounced
-    PORT MAP (
-          clk => clk,
-          rst => rst,
-          input => input,
-          debounce => debounce
+    uut : Rotation_Encoder_Debounced
+    PORT MAP(
+        clk => clk,
+        rst => rst,
+        input => input,
+        debounce => debounce
     );
 
     -- Clock process definitions
-    clk_process :process
-    begin
+    clk_process : PROCESS
+    BEGIN
         clk <= '0';
-        wait for clk_period/2;
+        WAIT FOR clk_period/2;
         clk <= '1';
-        wait for clk_period/2;
-    end process;
-    
+        WAIT FOR clk_period/2;
+    END PROCESS;
+
     -- Stimulus process
-    stim_proc: process
-    begin		
+    stim_proc : PROCESS
+    BEGIN
         -- hold reset state for 100 ns
-        wait for 100 ns;  
-        rst <= '0';
-        wait for 20 ns;
+        WAIT FOR 100 ns;
         rst <= '1';
-        
+        WAIT FOR 20 ns;
+        rst <= '0';
+
         -- Simulate button press with bouncing (prellendes Signal)
-        wait for 200 ns;
-        input <= '0';
-        wait for 5 ns;
-        input <= '1';
-        wait for 5 ns;
-        input <= '0';
-        wait for 5 ns;
-        input <= '1';
-        wait for 5 ns;
-        input <= '0';
-        wait for 100 ns;
-        input <= '1';
-        
-        -- Another bouncing scenario
-        wait for 500 ns;
-        input <= '0';
-        wait for 10 ns;
-        input <= '1';
-        wait for 10 ns;
-        input <= '0';
-        wait for 10 ns;
-        input <= '1';
-        wait for 10 ns;
-        input <= '0';
-        wait for 50 ns;
-        input <= '1';
-        
-        -- End simulation
-        wait for 500 ns;
-        wait;
-    end process;
+        WAIT FOR 200 ns;
+
+        input <= '1'; 
+        WAIT FOR 200 ns;
+
+        WAIT;
+    END PROCESS;
 
 END;
