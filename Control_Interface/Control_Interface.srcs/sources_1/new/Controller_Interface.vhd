@@ -141,7 +141,9 @@ BEGIN
 
     END PROCESS;
 
-    racket_y_pos_o <= STD_LOGIC_VECTOR(to_unsigned(pos_i, 7));
-    push_but_deb_o <= not push_but_deb;
+    racket_y_pos_o(1 DOWNTO 0) <= rot_enc_i; -- STD_LOGIC_VECTOR(to_signed(pos_i, 7));
+
+    racket_y_pos_o(3 DOWNTO 2) <= debounceoutput_a_b;
+    push_but_deb_o <= NOT push_but_deb;
 
 END Behavioral;
