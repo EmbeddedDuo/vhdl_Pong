@@ -17,9 +17,10 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-LIBRARY IEEE;
-USE IEEE.STD_LOGIC_1164.ALL;
-USE ieee.numeric_std.ALL;
+
+
+library IEEE; 
+use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -30,77 +31,59 @@ USE ieee.numeric_std.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-ENTITY Rotation_Encoder_Debounced IS
-    GENERIC (
-        clk_frequency_in_Hz : INTEGER := 125_000_000;
-        debounce_time_in_us : INTEGER := 2000;
-        active_low : BOOLEAN := true
+entity Rotation_Encoder_Debounced is
+    Generic (
+        clk_frequency_in_Hz : integer := 125_000_000; 
+        debounce_time_in_us : integer := 2000
     );
 
-    PORT (
-        clk : IN STD_LOGIC;
-        rst : IN STD_LOGIC;
-        input : IN STD_LOGIC;
-        debounce : OUT STD_LOGIC
+    Port ( 
+        clk : in std_logic;
+        rst : in STD_LOGIC;
+        input : in STD_LOGIC;
+        debounce : out STD_LOGIC
     );
-END Rotation_Encoder_Debounced;
+end Rotation_Encoder_Debounced;
 
-ARCHITECTURE Behavioral OF Rotation_Encoder_Debounced IS
-    SIGNAL max_count : INTEGER := (clk_frequency_in_Hz / 1_000_000) * (debounce_time_in_us / 2 );
+architecture Behavioral of Rotation_Encoder_Debounced is
 
-    SIGNAL counter : INTEGER := 0;
-    SIGNAL sample : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0001";
-    SIGNAL sample_rate : STD_LOGIC := '0';
+    signal max_count : integer := (clk_frequency_in_Hz / 1_000_000) * (debounce_time_in_us);
+    signal counter : integer := 0;
+    signal sync_in : std_logic := '0';
+    signal deb_out : std_logic := '0';
 
-BEGIN
+begin
 
-    PROCESS (clk, rst)
-    BEGIN
-        IF rst = '1' THEN
+    sync_process: process(clk)
+    begin
+        if rising_edge(clk) then
+            sync_in <= input;
+        end if;
+    end process;
+
+    debounce_process: process(clk, rst,sync_in)
+    begin
+        if rst = '1' then
             counter <= 0;
-            sample_rate <= '0';
-        ELSIF rising_edge(clk) THEN
-            IF (counter < max_count) THEN
-                counter <= counter + 1;
-                sample_rate <= '0';
-            ELSE
-                counter <= 0;
-                sample_rate <= '1';
-            END IF;
-        END IF;
-    END PROCESS;
+        end if;
+        if rising_edge(clk) then
+            if sync_in = '0' then
+                if counter = max_count then
+                    deb_out <= '1';
+                    counter <= 0;
+                else 
+                    counter <= counter + 1;
+                end if;
+            else
+                if counter = 0 then
+                    deb_out <= '0';
+                else 
+                    counter <= counter - 1;
+                end if;
+            end if;
+        end if;
+    end process;
 
-    PROCESS (clk, rst) --Sampling Process
-    BEGIN
-        IF rst = '1' THEN
-            sample <= (OTHERS => input);
-        ELSIF rising_edge(clk) THEN
-            IF (sample_rate = '1') THEN
-                sample(3 DOWNTO 1) <= sample(2 DOWNTO 0); -- Linksschieben
-                sample(0) <= input;
-            END IF;
-        END IF;
-    END PROCESS;
+    debounce <= deb_out;
+end Behavioral;
 
-    PROCESS (clk, rst)
-    BEGIN
-        IF rst = '1' THEN
-            debounce <= '0';
-        ELSIF rising_edge(clk) THEN
-            IF (active_low) THEN
-                IF (sample = "0000") THEN
-                    debounce <= '1';
-                ELSIF (sample = "1111") THEN
-                    debounce <= '0';
-                END IF;
-            ELSE
-                IF (sample = "1111") THEN --Aktiv High Konstant-Ausgang
-                    debounce <= '0';
-                ELSIF (sample = "0000") THEN
-                    debounce <= '1';
-                END IF;
-            END IF;
-        END IF;
-    END PROCESS;
-
-END Behavioral;
