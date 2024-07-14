@@ -19,20 +19,11 @@
 ----------------------------------------------------------------------------------
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.numeric_std.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+USE IEEE.NUMERIC_STD.ALL;
 
 ENTITY Controller_Interface IS
     GENERIC (
-        clk_frequency_in_Hz : INTEGER := 125_000_0000;
+        clk_frequency_in_Hz : INTEGER := 125_000_000;
         racket_steps : INTEGER := 5;
         debounce_time_in_us : INTEGER := 2000;
         racket_height : INTEGER := 30;
@@ -44,7 +35,9 @@ ENTITY Controller_Interface IS
         rot_enc_i : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
         push_but_i : IN STD_LOGIC;
         push_but_deb_o : OUT STD_LOGIC;
-        racket_y_pos_o : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
+        racket_y_pos_o : OUT STD_LOGIC_VECTOR (6 DOWNTO 0);
+        n_ssd_enable : OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+        n_ssd_data : OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
     );
 END Controller_Interface;
 
@@ -52,21 +45,24 @@ ARCHITECTURE Behavioral OF Controller_Interface IS
 
     SIGNAL debounceoutput_a_b : STD_LOGIC_VECTOR (1 DOWNTO 0);
     SIGNAL push_but_deb : STD_LOGIC := '0';
-    SIGNAL pos_i : INTEGER := 209;
+    SIGNAL pos_i : INTEGER := 5;
+    SIGNAL pos_s : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
     TYPE state_type IS (clockwise, counterclockwise, notrunning);
     SIGNAL current_state : state_type := notrunning;
     SIGNAL next_state : state_type;
     SIGNAL a : STD_LOGIC := '0';
     SIGNAL b : STD_LOGIC := '0';
+
 BEGIN
+
+    n_ssd_enable <= "11111110";
 
     g_debounce_signals : FOR i IN 0 TO rot_enc_i'length - 1 GENERATE
         debounce_signal : ENTITY work.Rotation_Encoder_Debounced
             GENERIC MAP(
                 clk_frequency_in_Hz => clk_frequency_in_Hz,
-                debounce_time_in_us => debounce_time_in_us,
-                active_low => true
+                debounce_time_in_us => debounce_time_in_us
             )
             PORT MAP(
                 clk => clock_i,
@@ -78,8 +74,7 @@ BEGIN
     debounce_signal : ENTITY work.Rotation_Encoder_Debounced
         GENERIC MAP(
             clk_frequency_in_Hz => clk_frequency_in_Hz,
-            debounce_time_in_us => debounce_time_in_us,
-            active_low => true
+            debounce_time_in_us => debounce_time_in_us
         )
         PORT MAP(
             clk => clock_i,
@@ -87,26 +82,24 @@ BEGIN
             input => push_but_i,
             debounce => push_but_deb
         );
+        
+    sync: process(clock_i)
+    begin
+        if rising_edge(clock_i) then
+            a <= debounceoutput_a_b(0);
+            b <= debounceoutput_a_b(1);
+        end if;
+    end process;
 
-    zuef_p : PROCESS (current_state, debounceoutput_a_b)
-
+    zuef_p : PROCESS (clock_i)
     BEGIN
-        a <= debounceoutput_a_b(0);
-        b <= debounceoutput_a_b(1);
-
         IF a = '0' AND b = '0' THEN
             next_state <= notrunning;
-        END IF;
-
-        IF rising_edge(a) THEN
+        ELSIF a'event AND a = '1' THEN
             IF b = '0' THEN
-                IF current_state = counterclockwise THEN
-                    next_state <= clockwise;
-                END IF;
+                next_state <= clockwise;
             ELSE
-                IF current_state = clockwise THEN
-                    next_state <= counterclockwise;
-                END IF;
+                next_state <= counterclockwise;
             END IF;
         END IF;
     END PROCESS;
@@ -115,7 +108,7 @@ BEGIN
     BEGIN
         IF reset_i = '1' THEN
             current_state <= notrunning;
-        ELSIF clock_i' event AND clock_i = '1' THEN
+        ELSIF rising_edge(clock_i) THEN
             current_state <= next_state;
         END IF;
     END PROCESS;
@@ -124,25 +117,32 @@ BEGIN
     BEGIN
         CASE current_state IS
             WHEN clockwise =>
-                IF pos_i > 449 THEN
-                    pos_i <= 449;
-                ELSE
+                IF pos_i < screen_height - racket_height THEN
                     pos_i <= pos_i + racket_steps;
                 END IF;
             WHEN counterclockwise =>
-                IF pos_i < 0 THEN
-                    pos_i <= 0;
-                ELSE
+                IF pos_i > 0 THEN
                     pos_i <= pos_i - racket_steps;
                 END IF;
             WHEN OTHERS =>
-                pos_i <= pos_i;
+                pos_i <= pos_i; -- Maintain current position
         END CASE;
-
     END PROCESS;
 
-    racket_y_pos_o(1 DOWNTO 0) <= rot_enc_i; -- STD_LOGIC_VECTOR(to_signed(pos_i, 7));
+    process (clock_i)
+    begin
+        if rising_edge(clock_i) then
+            pos_s <= std_logic_vector(to_signed(pos_i, 4));
+        end if;
+    end process;
+    
+    bcd_Decoder_Ins : ENTITY work.BCD_Decoder
+        PORT MAP(
+            bcd_in => pos_s, 
+            segment_out => n_ssd_data
+        );
 
+    racket_y_pos_o(1 DOWNTO 0) <= rot_enc_i;
     racket_y_pos_o(3 DOWNTO 2) <= debounceoutput_a_b;
     push_but_deb_o <= NOT push_but_deb;
 
