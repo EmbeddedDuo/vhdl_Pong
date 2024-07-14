@@ -91,9 +91,9 @@ BEGIN
         end if;
     end process;
 
-    zuef_p : PROCESS (clock_i)
+    zuef_p : PROCESS (a,b)
     BEGIN
-        IF a = '0' AND b = '0' THEN
+        IF a = '0' AND b = '0' THEN 
             next_state <= notrunning;
         ELSIF a'event AND a = '1' THEN
             IF b = '0' THEN
@@ -117,24 +117,24 @@ BEGIN
     BEGIN
         CASE current_state IS
             WHEN clockwise =>
-                IF pos_i < screen_height - racket_height THEN
-                    pos_i <= pos_i + racket_steps;
+                IF pos_i > 8 THEN
+                   pos_i <= 8;
+                ELSE
+                    pos_i <= pos_i + 1;
                 END IF;
             WHEN counterclockwise =>
-                IF pos_i > 0 THEN
-                    pos_i <= pos_i - racket_steps;
+                IF pos_i < 0 THEN
+                   pos_i <= 0;
+                ELSE
+                    pos_i <= pos_i - 1;
                 END IF;
             WHEN OTHERS =>
-                pos_i <= pos_i; -- Maintain current position
         END CASE;
     END PROCESS;
 
-    process (clock_i)
-    begin
-        if rising_edge(clock_i) then
-            pos_s <= std_logic_vector(to_signed(pos_i, 4));
-        end if;
-    end process;
+
+    pos_s <= std_logic_vector(to_signed(pos_i, 4));
+
     
     bcd_Decoder_Ins : ENTITY work.BCD_Decoder
         PORT MAP(
