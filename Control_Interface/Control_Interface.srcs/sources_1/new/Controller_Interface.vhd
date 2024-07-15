@@ -58,7 +58,8 @@ ARCHITECTURE Behavioral OF Controller_Interface IS
 BEGIN
 
     n_ssd_enable <= "11111110";
-
+    
+    -- debounced value for rotation encoder
     g_debounce_signals : FOR i IN 0 TO rot_enc_i'length - 1 GENERATE
         debounce_signal : ENTITY work.Rotation_Encoder_Debounced
             GENERIC MAP(
@@ -72,6 +73,8 @@ BEGIN
                 debounce => debounceoutput_a_b(i)
             );
     END GENERATE;
+    
+    -- debounced value for the button (sw)
     debounce_signal : ENTITY work.Rotation_Encoder_Debounced
         GENERIC MAP(
             clk_frequency_in_Hz => clk_frequency_in_Hz,
@@ -93,7 +96,7 @@ BEGIN
     end process;
     
 
-    zuef_p : PROCESS (current_state)
+    zuef_p : PROCESS (current_state,a,b)
     BEGIN
         case current_state is
             when s00 =>
@@ -128,6 +131,8 @@ BEGIN
                 else
                     next_state <= current_state;
                 end if;
+            when others =>
+                next_state <= s00;
         end case;
     END PROCESS;
     
@@ -141,27 +146,28 @@ BEGIN
         END IF;
     END PROCESS;
 
-    af_p : PROCESS (current_state)
+    af_p : PROCESS (current_state, prev_state, pos_i, clock_i)
     BEGIN
-        if current_state = s00 then
-            if prev_state = s10 then
-                if pos_i <= 9 then
+    
+        IF rising_edge(clock_i) THEN
+            if current_state = s00 then
+                if prev_state = s10 and pos_i /= 9 then       
                     pos_i <= pos_i + 1;
-                else
-                    pos_i <= 9;
+                elsif prev_state = s01 and pos_i /= 0 then  
+                    pos_i <= pos_i - 1;       
+                else 
+                    pos_i <= pos_i;
                 end if;
-            elsif prev_state = s01 then
-                if pos_i >= 0 then
-                    pos_i <= pos_i - 1;
-                else
-                    pos_i <= 0;
-                end if;
+            else 
+                pos_i <= pos_i;
             end if;
-        end if;
+        
+            pos_s <= std_logic_vector(to_signed(pos_i, 4));
+        END IF;
         
     END PROCESS;
     
-    pos_s <= std_logic_vector(to_signed(pos_i, 4));
+    
     
     bcd_Decoder_Ins : ENTITY work.BCD_Decoder
         PORT MAP(
