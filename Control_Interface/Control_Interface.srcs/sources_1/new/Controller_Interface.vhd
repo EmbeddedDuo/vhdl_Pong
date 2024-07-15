@@ -48,9 +48,10 @@ ARCHITECTURE Behavioral OF Controller_Interface IS
     SIGNAL pos_i : INTEGER := 5;
     SIGNAL pos_s : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
-    TYPE state_type IS (clockwise, counterclockwise, notrunning);
-    SIGNAL current_state : state_type := notrunning;
+    TYPE state_type IS (s00, s01, s11, s10);
+    SIGNAL current_state : state_type := s00;
     SIGNAL next_state : state_type;
+    SIGNAL prev_state : state_type := s00;
     SIGNAL a : STD_LOGIC := '0';
     SIGNAL b : STD_LOGIC := '0';
 
@@ -90,51 +91,77 @@ BEGIN
             b <= debounceoutput_a_b(1);
         end if;
     end process;
+    
 
-    zuef_p : PROCESS (a,b)
+    zuef_p : PROCESS (current_state)
     BEGIN
-        IF a = '0' AND b = '0' THEN 
-            next_state <= notrunning;
-        ELSIF a'event AND a = '1' THEN
-            IF b = '0' THEN
-                next_state <= clockwise;
-            ELSE
-                next_state <= counterclockwise;
-            END IF;
-        END IF;
+        case current_state is
+            when s00 =>
+                if a = '1' then
+                    next_state <= s01;
+                elsif b = '1' then
+                    next_state <= s10;
+                else
+                    next_state <= current_state;
+                end if;
+            when s01 =>
+                if a = '0' then
+                    next_state <= s00;
+                elsif b = '1' then
+                    next_state <= s11;
+                else
+                    next_state <= current_state;
+                end if;
+            when s11 =>
+                if a = '0' then
+                    next_state <= s10;
+                elsif b = '0' then
+                    next_state <= s01;
+                else
+                    next_state <= current_state;
+                end if;
+            when s10 =>
+                if a = '1' then
+                    next_state <= s11;
+                elsif b = '0' then
+                    next_state <= s00;
+                else
+                    next_state <= current_state;
+                end if;
+        end case;
     END PROCESS;
+    
+
 
     speicher_p : PROCESS (clock_i)
     BEGIN
-        IF reset_i = '1' THEN
-            current_state <= notrunning;
-        ELSIF rising_edge(clock_i) THEN
+        IF rising_edge(clock_i) THEN
+            prev_state <= current_state;
             current_state <= next_state;
         END IF;
     END PROCESS;
 
     af_p : PROCESS (current_state)
     BEGIN
-        CASE current_state IS
-            WHEN clockwise =>
-                IF pos_i > 8 THEN
-                   pos_i <= 8;
-                ELSE
+        if current_state = s00 then
+            if prev_state = s10 then
+                if pos_i <= 9 then
                     pos_i <= pos_i + 1;
-                END IF;
-            WHEN counterclockwise =>
-                IF pos_i < 0 THEN
-                   pos_i <= 0;
-                ELSE
+                else
+                    pos_i <= 9;
+                end if;
+            elsif prev_state = s01 then
+                if pos_i >= 0 then
                     pos_i <= pos_i - 1;
-                END IF;
-            WHEN OTHERS =>
-        END CASE;
+                else
+                    pos_i <= 0;
+                end if;
+            end if;
+        end if;
+        
     END PROCESS;
-
-
+    
     pos_s <= std_logic_vector(to_signed(pos_i, 4));
-
     
     bcd_Decoder_Ins : ENTITY work.BCD_Decoder
         PORT MAP(
@@ -144,6 +171,7 @@ BEGIN
 
     racket_y_pos_o(1 DOWNTO 0) <= rot_enc_i;
     racket_y_pos_o(3 DOWNTO 2) <= debounceoutput_a_b;
+    racket_y_pos_o(6 DOWNTO 4) <= "111";
     push_but_deb_o <= NOT push_but_deb;
 
 END Behavioral;
