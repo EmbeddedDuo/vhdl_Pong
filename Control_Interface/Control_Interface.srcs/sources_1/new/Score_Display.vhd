@@ -44,34 +44,43 @@ ENTITY Score_Display IS
 END Score_Display;
 
 ARCHITECTURE Behavioral OF Score_Display IS
-    SIGNAL player1_score, player2_score : INTEGER RANGE 0 TO 99 := 0;
+    SIGNAL player_left_score, player_right_score : INTEGER RANGE 0 TO 99 := 0;
     SIGNAL game_over : STD_LOGIC := '0';
 BEGIN
 
-    restart : PROCESS (push_but1_deb_i, push_but2_deb_i)
-    BEGIN
-        IF rising_edge(push_but1_deb_i) OR rising_edge(push_but2_deb_i) THEN
-            IF game_over = '1' THEN
-                player1_score <= 0;
-                player2_score <= 0;
-                game_over <= '0';
-            END IF;
-        END IF;
+--    restart : PROCESS (clock_i, push_but1_deb_i, push_but2_deb_i)
+--    BEGIN
+--        IF rising_edge(clock_i) THEN
 
-    END PROCESS;
-    scoring : PROCESS (hit_wall_i)
+--        END IF;
+--    END PROCESS;
+    
+    scoring : PROCESS (clock_i, hit_wall_i)
     BEGIN
-        IF hit_wall_i = "101" THEN
-            IF player1_score = score_max THEN
-                game_over <= '1';
-            ELSE
-                player1_score <= player1_score + 1;
+        if rising_edge(clock_i) THEN
+           IF push_but1_deb_i = '1' OR push_but2_deb_i = '1' THEN
+                IF game_over = '1' THEN
+                    player_left_score <= 0;
+                    player_right_score <= 0;
+                    game_over <= '0';
+                END IF;
             END IF;
-        ELSIF hit_wall_i = "110" THEN
-            IF player2_score = score_max THEN
-                game_over <= '1';
+            
+            IF hit_wall_i = "101" THEN
+                IF player_left_score = score_max THEN
+                    game_over <= '1';
+                ELSE
+                    player_left_score <= player_left_score + 1;
+                END IF;
+            ELSIF hit_wall_i = "110" THEN
+                IF player_right_score = score_max THEN
+                    game_over <= '1';
+                ELSE
+                    player_right_score <= player_right_score + 1;
+                END IF;
             ELSE
-                player2_score <= player2_score + 1;
+                player_left_score <= player_left_score;
+                player_right_score <= player_right_score;
             END IF;
         END IF;
     END PROCESS;
