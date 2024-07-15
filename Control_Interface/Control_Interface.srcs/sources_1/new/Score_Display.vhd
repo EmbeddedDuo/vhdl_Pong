@@ -45,7 +45,9 @@ END Score_Display;
 
 ARCHITECTURE Behavioral OF Score_Display IS
     SIGNAL player_left_score, player_right_score : INTEGER RANGE 0 TO 99 := 0;
-    SIGNAL game_over : STD_LOGIC := '0';
+    TYPE state_type IS (game_restarted,game_running, game_over);
+    SIGNAL current_state : state_type := game_running;
+    SIGNAL next_state : state_type;
 BEGIN
 
 --    restart : PROCESS (clock_i, push_but1_deb_i, push_but2_deb_i)
@@ -55,35 +57,65 @@ BEGIN
 --        END IF;
 --    END PROCESS;
     
-    scoring : PROCESS (clock_i, hit_wall_i)
+    zuef_p : PROCESS (clock_i, current_state, hit_wall_i, player_left_score, player_right_score)
     BEGIN
         if rising_edge(clock_i) THEN
-           IF push_but1_deb_i = '1' OR push_but2_deb_i = '1' THEN
-                IF game_over = '1' THEN
-                    player_left_score <= 0;
-                    player_right_score <= 0;
-                    game_over <= '0';
-                END IF;
+            CASE current_state is
+                when game_restarted => 
+                        player_left_score <= 0;
+                        player_right_score <= 0;
+                        next_state <= game_running;
+                when game_running =>
+                    if hit_wall_i = "101" THEN
+                        if(player_left_score = score_max) then
+                            next_state <= game_over;
+                        else
+                            player_left_score <= player_left_score + 1;
+                        END IF;
+                    elsif hit_wall_i = "101" THEN
+                        if(player_right_score = score_max) then
+                            next_state <= game_over;
+                        else
+                            player_right_score <= player_right_score + 1;
+                        end if;    
+                    ELSE
+                        next_state <= current_state;
+                    END IF;
+                WHEN game_over =>
+                    IF push_but1_deb_i = '1' OR push_but2_deb_i = '1' THEN
+                        player_left_score <= 0;
+                        player_right_score <= 0;
+                        next_state <= game_running;
+                    ELSE
+                    next_state <= current_state;
+                    END IF;
+                WHEN OTHERS =>
+                    next_state <= current_state;
+                END CASE;
             END IF;
-            
-            IF hit_wall_i = "101" THEN
-                IF player_left_score = score_max THEN
-                    game_over <= '1';
-                ELSE
-                    player_left_score <= player_left_score + 1;
-                END IF;
-            ELSIF hit_wall_i = "110" THEN
-                IF player_right_score = score_max THEN
-                    game_over <= '1';
-                ELSE
-                    player_right_score <= player_right_score + 1;
-                END IF;
-            ELSE
-                player_left_score <= player_left_score;
-                player_right_score <= player_right_score;
-            END IF;
+    END PROCESS;
+
+    speicher_p : process(clock_i, reset_i)
+    begin
+        if reset_i = '1' then
+            current_state <= game_restarted;
+        ELSIF rising_edge(clock_i) THEN
+            current_state <= next_state;
+        else
+            current_state <= current_state;
+            next_state <= next_state;
         END IF;
     END PROCESS;
 
-    game_over <= game_over;
+    af_p : process(clock_i, current_state)
+    begin
+        IF rising_edge(clock_i) THEN
+            if current_state = game_over then
+                game_over_o <= '1';
+            else
+                game_over_o <= '0';
+            END IF;
+        END IF;
+    end process;
+
 END Behavioral;
