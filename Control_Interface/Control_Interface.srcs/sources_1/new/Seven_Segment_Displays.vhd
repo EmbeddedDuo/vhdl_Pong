@@ -39,7 +39,7 @@ entity Seven_Segment_Displays is
         led_enable_i : IN STD_LOGIC;
         player_left_score_i : IN INTEGER RANGE 0 TO 99;
         player_right_score_i : IN INTEGER RANGE 0 TO 99;
-        seven_seg_leds_o : OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+        seven_seg_leds_o : OUT STD_LOGIC_VECTOR (6 DOWNTO 0);
         seven_seg_sel_o : OUT STD_LOGIC_VECTOR (5 DOWNTO 0)
      );
 end Seven_Segment_Displays;

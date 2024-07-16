@@ -22,6 +22,18 @@ ARCHITECTURE Behavioral OF Score_Display IS
     SIGNAL next_state : state_type := game_running;
 BEGIN
 
+    seven_segment: ENTITY work.Seven_Segment_Displays
+        Port Map(
+        clock_i => clock_i,
+        reset_i => reset_i,
+        led_enable_i => led_enable_i,
+        player_left_score_i => player_left_score,
+        player_right_score_i => player_right_score,
+        seven_seg_leds_o =>  seven_seg_leds_o,
+        seven_seg_sel_o => seven_seg_sel_o
+        );
+    
+
     zuef_p : PROCESS (hit_wall_i, current_state, clock_i )
     BEGIN
         if rising_edge(clock_i) then
