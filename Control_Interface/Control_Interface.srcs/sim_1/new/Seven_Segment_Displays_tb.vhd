@@ -35,7 +35,7 @@ architecture Behavioral of Seven_Segment_Displays_tb is
         led_enable_i : IN STD_LOGIC;
         player_left_score_i : IN INTEGER RANGE 0 TO 99;
         player_right_score_i : IN INTEGER RANGE 0 TO 99;
-        seven_seg_leds_o : OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
+        seven_seg_leds_o : OUT STD_LOGIC_VECTOR (6 DOWNTO 0);
         seven_seg_sel_o : OUT STD_LOGIC_VECTOR (5 DOWNTO 0)
     );
     end component;
@@ -46,7 +46,7 @@ architecture Behavioral of Seven_Segment_Displays_tb is
     signal led_enable_i : STD_LOGIC := '0';
     signal player_left_score_i : INTEGER RANGE 0 TO 99 := 0;
     signal player_right_score_i : INTEGER RANGE 0 TO 99 := 0;
-    signal seven_seg_leds_o : STD_LOGIC_VECTOR (7 DOWNTO 0);
+    signal seven_seg_leds_o : STD_LOGIC_VECTOR (6 DOWNTO 0);
     signal seven_seg_sel_o : STD_LOGIC_VECTOR (5 DOWNTO 0);
 
     -- Clock period definitions
@@ -82,7 +82,7 @@ begin
         led_enable_i <= '0';
         wait for led_enable_period/2;
         led_enable_i <= '1';
-        wait for led_enable_period/2;
+        wait for clock_period/2;
     end process;
 
     -- Stimulus process
