@@ -64,6 +64,8 @@ begin
         segment_out <= "00000001";
         when "1001" =>
         segment_out <= "00001001";
+        when "1010" =>
+        segment_out <= "11111101";
         when others =>
         segment_out <= "11111110";
         end case;
