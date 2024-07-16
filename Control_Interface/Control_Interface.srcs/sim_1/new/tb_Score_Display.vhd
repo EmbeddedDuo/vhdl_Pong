@@ -36,7 +36,7 @@ ARCHITECTURE behavior OF tb_Score_Display IS
     SIGNAL game_over_o : STD_LOGIC;
 
     -- Clock period definition
-    CONSTANT clock_period : TIME := 1 ms;
+    CONSTANT clock_period : TIME := 8ns;
 
 BEGIN
 
@@ -57,6 +57,16 @@ BEGIN
             game_over_o => game_over_o
         );
 
+    hit_wall_p : PROCESS
+    BEGIN
+            hit_wall_i <= "101";
+            WAIT FOR clock_period;
+            hit_wall_i <= "000";
+            WAIT FOR clock_period;
+            hit_wall_i <= "110";
+            WAIT FOR clock_period;
+    END PROCESS;
+
     -- Clock process definitions
     clock_process : PROCESS
     BEGIN
@@ -68,29 +78,24 @@ BEGIN
 
     -- Stimulus process
     stim_proc: PROCESS
-    BEGIN		
+    BEGIN	
+    
+        WAIT FOR 10 ms;	
         -- hold reset state for 100 ns.
         reset_i <= '1';
-        WAIT FOR 100 ns;	
+        WAIT FOR 10 ns;	
         reset_i <= '0';
         
         -- Initial state: No button press, no hits
-        WAIT FOR 5 ms;
+        WAIT FOR 5 ns;
         push_but1_deb_i <= '1';
          push_but1_deb_i <= '1';
         
-         WAIT FOR 5 ms;
+         WAIT FOR 5 ns;
         
  
         -- Continue simulation for player scores to reach the maximum score
-        FOR i IN 1 TO 12 LOOP
-            hit_wall_i <= "101";
-            WAIT FOR clock_period;
-            hit_wall_i <= "000";
-            WAIT FOR clock_period;
-            hit_wall_i <= "110";
-            WAIT FOR clock_period;
-        END LOOP;
+
 
 --        -- Now the left player should reach max score and game should be over
 --        hit_wall_i <= "101";

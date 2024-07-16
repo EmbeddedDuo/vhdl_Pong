@@ -18,12 +18,13 @@ END Score_Display;
 ARCHITECTURE Behavioral OF Score_Display IS
     SIGNAL player_left_score, player_right_score : INTEGER RANGE 0 TO 99 := 0;
     TYPE state_type IS (game_restarted, game_running, game_over);
-    SIGNAL current_state : state_type := game_restarted;
-    SIGNAL next_state : state_type;
+    SIGNAL current_state : state_type := game_running;
+    SIGNAL next_state : state_type := game_running;
 BEGIN
 
-    zuef_p : PROCESS (hit_wall_i, current_state )
+    zuef_p : PROCESS (hit_wall_i, current_state, clock_i )
     BEGIN
+        if rising_edge(clock_i) then
             CASE current_state IS
                 WHEN game_restarted =>
                     player_left_score <= 0;
@@ -31,20 +32,14 @@ BEGIN
                     next_state <= game_running;
 
                 WHEN game_running =>
-                    IF hit_wall_i = "101" THEN
-                        IF (player_left_score = score_max) THEN
+                    IF (player_left_score = score_max) or (player_right_score = score_max)  THEN
                             next_state <= game_over;
-                        ELSE
+                    ELSIF hit_wall_i = "101" THEN
                             player_left_score <= player_left_score + 1;
                             next_state <= game_running;
-                        END IF;
                     ELSIF hit_wall_i = "110" THEN
-                        IF (player_right_score = score_max) THEN
-                            next_state <= game_over;
-                        ELSE
                             player_right_score <= player_right_score + 1;
                             next_state <= game_running;
-                        END IF;
                     ELSE
                         next_state <= current_state;
                     END IF;
@@ -61,6 +56,7 @@ BEGIN
                 WHEN OTHERS =>
                     next_state <= current_state;
             END CASE;
+        end if;
     END PROCESS;
 
     speicher_p : PROCESS (clock_i, reset_i)
