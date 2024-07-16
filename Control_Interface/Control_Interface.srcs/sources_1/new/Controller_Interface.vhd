@@ -35,18 +35,15 @@ ENTITY Controller_Interface IS
         rot_enc_i : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
         push_but_i : IN STD_LOGIC;
         push_but_deb_o : OUT STD_LOGIC;
-        racket_y_pos_o : OUT STD_LOGIC_VECTOR (6 DOWNTO 0);
-        n_ssd_enable : OUT STD_LOGIC_VECTOR (7 DOWNTO 0);
-        n_ssd_data : OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+        racket_y_pos_o : OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
+ 
     );
 END Controller_Interface;
 
 ARCHITECTURE Behavioral OF Controller_Interface IS
 
     SIGNAL debounceoutput_a_b : STD_LOGIC_VECTOR (1 DOWNTO 0);
-    SIGNAL push_but_deb : STD_LOGIC := '0';
-    SIGNAL pos_i : INTEGER := 5;
-    SIGNAL pos_s : STD_LOGIC_VECTOR(3 DOWNTO 0);
+    SIGNAL pos_i : INTEGER := (screen_height-racket_height)/2 - 1;
 
     TYPE state_type IS (s00, s01, s11, s10);
     SIGNAL current_state : state_type := s00;
@@ -57,7 +54,6 @@ ARCHITECTURE Behavioral OF Controller_Interface IS
 
 BEGIN
 
-    n_ssd_enable <= "11111110";
     
     -- debounced value for rotation encoder
     g_debounce_signals : FOR i IN 0 TO rot_enc_i'length - 1 GENERATE
@@ -84,7 +80,7 @@ BEGIN
             clk => clock_i,
             rst => reset_i,
             input => push_but_i,
-            debounce => push_but_deb
+            debounce => push_but_deb_o
         );
         
     sync: process(clock_i)
@@ -151,10 +147,10 @@ BEGIN
     
         IF rising_edge(clock_i) THEN
             if current_state = s00 then
-                if prev_state = s10 and pos_i /= 9 then       
-                    pos_i <= pos_i + 1;
-                elsif prev_state = s01 and pos_i /= 0 then  
-                    pos_i <= pos_i - 1;       
+                if prev_state = s10 and pos_i < (screen_height - racket_height -1) then       
+                    pos_i <= pos_i + racket_steps;
+                elsif prev_state = s01 and pos_i > 0 then  
+                    pos_i <= pos_i - racket_steps;       
                 else 
                     pos_i <= pos_i;
                 end if;
@@ -162,22 +158,11 @@ BEGIN
                 pos_i <= pos_i;
             end if;
         
-            pos_s <= std_logic_vector(to_signed(pos_i, 4));
+            racket_y_pos_o <= <= std_logic_vector(to_signed(pos_i, 10));
         END IF;
         
     END PROCESS;
-    
-    
-    
-    bcd_Decoder_Ins : ENTITY work.BCD_Decoder
-        PORT MAP(
-            bcd_in => pos_s, 
-            segment_out => n_ssd_data
-        );
+   
 
-    racket_y_pos_o(1 DOWNTO 0) <= rot_enc_i;
-    racket_y_pos_o(3 DOWNTO 2) <= debounceoutput_a_b;
-    racket_y_pos_o(6 DOWNTO 4) <= "111";
-    push_but_deb_o <= NOT push_but_deb;
 
 END Behavioral;
