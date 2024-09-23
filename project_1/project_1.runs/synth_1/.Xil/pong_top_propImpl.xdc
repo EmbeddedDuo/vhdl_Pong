@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc rfile:../../../../../../Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc rfile:../../../project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:9 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN E3    IOSTANDARD LVCMOS33 } [get_ports { clock }]; #IO_L12P_T1_MRCC_35 Sch=clk100mhz
 set_property src_info {type:XDC file:1 line:13 export:INPUT save:INPUT read:READ} [current_design]

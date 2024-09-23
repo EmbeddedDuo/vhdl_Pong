@@ -25,7 +25,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='F:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.runs/synth_1'
+HD_PWD='F:/Studium/VHDL/ModulABprojekt/project_1/project_1.runs/synth_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log

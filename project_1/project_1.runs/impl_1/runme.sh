@@ -25,7 +25,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='F:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.runs/impl_1'
+HD_PWD='F:/Studium/VHDL/ModulABprojekt/project_1/project_1.runs/impl_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log
@@ -42,7 +42,7 @@ EAStep()
 }
 
 # pre-commands:
-/bin/touch .write_bitstream.begin.rst
+/bin/touch .init_design.begin.rst
 EAStep vivado -log pong_top.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source pong_top.tcl -notrace
 
 

@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
-| Date         : Thu Sep 19 23:27:34 2024
+| Date         : Tue Sep 24 01:23:18 2024
 | Host         : DESKTOP-HIIQ18E running 64-bit major release  (build 9200)
 | Command      : report_drc -file pong_top_drc_routed.rpt -pb pong_top_drc_routed.pb -rpx pong_top_drc_routed.rpx
 | Design       : pong_top

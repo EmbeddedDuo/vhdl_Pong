@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "F:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.runs/synth_1/pong_top.tcl"
+  variable script "F:/Studium/VHDL/ModulABprojekt/project_1/project_1.runs/synth_1/pong_top.tcl"
   variable category "vivado_synth"
 }
 
@@ -56,32 +56,34 @@ if {$::dispatch::connected} {
 }
 
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param chipscope.maxJobs 2
+set_param xicom.use_bs_reader 1
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a100tcsg324-1
 
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir F:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.cache/wt [current_project]
-set_property parent.project_path F:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.xpr [current_project]
+set_property webtalk.parent_dir F:/Studium/VHDL/ModulABprojekt/project_1/project_1.cache/wt [current_project]
+set_property parent.project_path F:/Studium/VHDL/ModulABprojekt/project_1/project_1.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
-set_property target_language Verilog [current_project]
-set_property ip_output_repo f:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.cache/ip [current_project]
+set_property target_language VHDL [current_project]
+set_property ip_output_repo f:/Studium/VHDL/ModulABprojekt/project_1/project_1.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_vhdl -library xil_defaultlib {
-  F:/Studium/VHDL/BCD_Decoder.vhd
-  F:/Studium/VHDL/Rotation_Encoder_Debounced.vhd
-  F:/Studium/VHDL/Controller_Interface.vhd
-  F:/Studium/VHDL/Seven_Segment_Displays.vhd
-  F:/Studium/VHDL/Score_Display.vhd
-  F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/ball_motion/src/ball_motion.vhd
-  F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable.vhd
-  F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable/src/clock_enable.vhd
-  F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd
-  F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/vga_controller/src/vga_controller.vhd
-  F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/pong_toplevel.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/BCD_Decoder.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Rotation_Encoder_Debounced.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Controller_Interface.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Seven_Segment_Displays.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Score_Display.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/ball_motion/src/ball_motion.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable/src/clock_enable.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/vga_controller/src/vga_controller.vhd
+  F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/pong_toplevel.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -92,10 +94,12 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc
-set_property used_in_implementation false [get_files F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc]
+read_xdc F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc
+set_property used_in_implementation false [get_files F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
+
+read_checkpoint -auto_incremental -incremental F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/utils_1/imports/synth_1/pong_top.dcp
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }

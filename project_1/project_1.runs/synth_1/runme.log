@@ -8,50 +8,55 @@
   **** SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
   **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
   **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-  **** Start of session at: Thu Sep 19 23:24:42 2024
+  **** Start of session at: Tue Sep 24 01:20:53 2024
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 
 source pong_top.tcl -notrace
-create_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 514.875 ; gain = 196.305
+create_project: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 512.793 ; gain = 199.109
+Command: read_checkpoint -auto_incremental -incremental F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/utils_1/imports/synth_1/pong_top.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/utils_1/imports/synth_1/pong_top.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
 Command: synth_design -top pong_top -part xc7a100tcsg324-1
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Device 21-403] Loading part xc7a100tcsg324-1
 INFO: [Device 21-9227] Part: xc7a100tcsg324-1 does not have CEAM library.
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 15724
+INFO: [Synth 8-7075] Helper process launched with PID 8952
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 1381.262 ; gain = 447.723
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1386.938 ; gain = 450.195
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-638] synthesizing module 'pong_top' [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/pong_toplevel.vhd:78]
-INFO: [Synth 8-638] synthesizing module 'clock_enable' [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable.vhd:57]
+INFO: [Synth 8-638] synthesizing module 'pong_top' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/pong_toplevel.vhd:78]
+INFO: [Synth 8-638] synthesizing module 'clock_enable' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable.vhd:57]
 	Parameter game_enable_clocks bound to: 1680000 - type: integer 
-INFO: [Synth 8-256] done synthesizing module 'clock_enable' (0#1) [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable.vhd:57]
-INFO: [Synth 8-638] synthesizing module 'Controller_Interface' [F:/Studium/VHDL/Controller_Interface.vhd:43]
+INFO: [Synth 8-256] done synthesizing module 'clock_enable' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/clock_enable.vhd:57]
+INFO: [Synth 8-638] synthesizing module 'Controller_Interface' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Controller_Interface.vhd:43]
 	Parameter clk_frequency_in_Hz bound to: 50000000 - type: integer 
 	Parameter racket_steps bound to: 10 - type: integer 
 	Parameter debounce_time_in_us bound to: 2000 - type: integer 
 	Parameter racket_height bound to: 60 - type: integer 
 	Parameter screen_height bound to: 480 - type: integer 
-INFO: [Synth 8-638] synthesizing module 'Rotation_Encoder_Debounced' [F:/Studium/VHDL/Rotation_Encoder_Debounced.vhd:48]
+INFO: [Synth 8-638] synthesizing module 'Rotation_Encoder_Debounced' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Rotation_Encoder_Debounced.vhd:48]
 	Parameter clk_frequency_in_Hz bound to: 50000000 - type: integer 
 	Parameter debounce_time_in_us bound to: 2000 - type: integer 
-INFO: [Synth 8-256] done synthesizing module 'Rotation_Encoder_Debounced' (0#1) [F:/Studium/VHDL/Rotation_Encoder_Debounced.vhd:48]
-INFO: [Synth 8-226] default block is never used [F:/Studium/VHDL/Controller_Interface.vhd:94]
-INFO: [Synth 8-256] done synthesizing module 'Controller_Interface' (0#1) [F:/Studium/VHDL/Controller_Interface.vhd:43]
-INFO: [Synth 8-638] synthesizing module 'collision_detection' [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd:62]
+INFO: [Synth 8-256] done synthesizing module 'Rotation_Encoder_Debounced' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Rotation_Encoder_Debounced.vhd:48]
+INFO: [Synth 8-226] default block is never used [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Controller_Interface.vhd:94]
+INFO: [Synth 8-256] done synthesizing module 'Controller_Interface' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Controller_Interface.vhd:43]
+INFO: [Synth 8-638] synthesizing module 'collision_detection' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd:62]
 	Parameter ball_length bound to: 6 - type: integer 
 	Parameter racket_length bound to: 10 - type: integer 
 	Parameter racket_height bound to: 60 - type: integer 
 	Parameter racket_left_space bound to: 20 - type: integer 
 	Parameter racket_right_space bound to: 610 - type: integer 
 	Parameter screen_height bound to: 480 - type: integer 
-INFO: [Synth 8-226] default block is never used [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd:89]
-INFO: [Synth 8-256] done synthesizing module 'collision_detection' (0#1) [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd:62]
-INFO: [Synth 8-638] synthesizing module 'ball_motion' [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/ball_motion/src/ball_motion.vhd:70]
+INFO: [Synth 8-226] default block is never used [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd:89]
+INFO: [Synth 8-256] done synthesizing module 'collision_detection' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/collision_detection/src/collision_detection.vhd:62]
+INFO: [Synth 8-638] synthesizing module 'ball_motion' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/ball_motion/src/ball_motion.vhd:70]
 	Parameter ball_length bound to: 6 - type: integer 
 	Parameter racket_length bound to: 10 - type: integer 
 	Parameter racket_height bound to: 60 - type: integer 
@@ -59,8 +64,8 @@ INFO: [Synth 8-638] synthesizing module 'ball_motion' [F:/Studium/VHDL/Pong_JP/P
 	Parameter racket_right_space bound to: 610 - type: integer 
 	Parameter screen_height bound to: 480 - type: integer 
 	Parameter speedup_racket bound to: 2 - type: integer 
-INFO: [Synth 8-256] done synthesizing module 'ball_motion' (0#1) [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/ball_motion/src/ball_motion.vhd:70]
-INFO: [Synth 8-638] synthesizing module 'vga_controller' [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/vga_controller/src/vga_controller.vhd:66]
+INFO: [Synth 8-256] done synthesizing module 'ball_motion' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/ball_motion/src/ball_motion.vhd:70]
+INFO: [Synth 8-638] synthesizing module 'vga_controller' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/vga_controller/src/vga_controller.vhd:66]
 	Parameter ball_length bound to: 6 - type: integer 
 	Parameter racket_length bound to: 10 - type: integer 
 	Parameter racket_height bound to: 60 - type: integer 
@@ -68,59 +73,61 @@ INFO: [Synth 8-638] synthesizing module 'vga_controller' [F:/Studium/VHDL/Pong_J
 	Parameter racket_right_space bound to: 610 - type: integer 
 	Parameter H_max bound to: 799 - type: integer 
 	Parameter V_max bound to: 524 - type: integer 
-INFO: [Synth 8-256] done synthesizing module 'vga_controller' (0#1) [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/vga_controller/src/vga_controller.vhd:66]
-INFO: [Synth 8-638] synthesizing module 'Score_Display' [F:/Studium/VHDL/Score_Display.vhd:18]
+INFO: [Synth 8-256] done synthesizing module 'vga_controller' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/vga_controller/src/vga_controller.vhd:66]
+INFO: [Synth 8-638] synthesizing module 'Score_Display' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Score_Display.vhd:18]
 	Parameter score_max bound to: 15 - type: integer 
-INFO: [Synth 8-638] synthesizing module 'Seven_Segment_Displays' [F:/Studium/VHDL/Seven_Segment_Displays.vhd:47]
-WARNING: [Synth 8-614] signal 'reset_i' is read in the process but is not in the sensitivity list [F:/Studium/VHDL/Seven_Segment_Displays.vhd:58]
-INFO: [Synth 8-638] synthesizing module 'BCD_Decoder' [F:/Studium/VHDL/BCD_Decoder.vhd:41]
-INFO: [Synth 8-256] done synthesizing module 'BCD_Decoder' (0#1) [F:/Studium/VHDL/BCD_Decoder.vhd:41]
-INFO: [Synth 8-256] done synthesizing module 'Seven_Segment_Displays' (0#1) [F:/Studium/VHDL/Seven_Segment_Displays.vhd:47]
-INFO: [Synth 8-256] done synthesizing module 'Score_Display' (0#1) [F:/Studium/VHDL/Score_Display.vhd:18]
-INFO: [Synth 8-256] done synthesizing module 'pong_top' (0#1) [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/sources_1/imports/src/pong_toplevel.vhd:78]
+INFO: [Synth 8-638] synthesizing module 'Seven_Segment_Displays' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Seven_Segment_Displays.vhd:47]
+WARNING: [Synth 8-614] signal 'reset_i' is read in the process but is not in the sensitivity list [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Seven_Segment_Displays.vhd:58]
+INFO: [Synth 8-638] synthesizing module 'BCD_Decoder' [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/BCD_Decoder.vhd:41]
+INFO: [Synth 8-256] done synthesizing module 'BCD_Decoder' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/BCD_Decoder.vhd:41]
+INFO: [Synth 8-256] done synthesizing module 'Seven_Segment_Displays' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Seven_Segment_Displays.vhd:47]
+INFO: [Synth 8-256] done synthesizing module 'Score_Display' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/ModulABprojekt/Score_Display.vhd:18]
+INFO: [Synth 8-256] done synthesizing module 'pong_top' (0#1) [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/sources_1/imports/VHDL/Pong_JP/Pong_JP/Pong_JP.srcs/sources_1/imports/src/pong_toplevel.vhd:78]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:12 . Memory (MB): peak = 1498.793 ; gain = 565.254
+Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 1503.398 ; gain = 566.656
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:12 . Memory (MB): peak = 1498.793 ; gain = 565.254
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 1503.398 ; gain = 566.656
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:12 . Memory (MB): peak = 1498.793 ; gain = 565.254
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 1503.398 ; gain = 566.656
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.024 . Memory (MB): peak = 1498.793 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.024 . Memory (MB): peak = 1503.398 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
-Parsing XDC File [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc]
-Finished Parsing XDC File [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc]
-INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [F:/Studium/VHDL/Pong_JP/Pong_JP.srcs/constrs_1/imports/nexysa7100t.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/pong_top_propImpl.xdc].
+Parsing XDC File [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc]
+Finished Parsing XDC File [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [F:/Studium/VHDL/ModulABprojekt/project_1/project_1.srcs/constrs_1/imports/imports/nexysa7100t.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/pong_top_propImpl.xdc].
 Resolution: To avoid this warning, move constraints listed in [.Xil/pong_top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1615.219 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1607.305 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.049 . Memory (MB): peak = 1615.219 ; gain = 0.000
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.031 . Memory (MB): peak = 1607.305 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:15 ; elapsed = 00:00:24 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Constraint Validation : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a100tcsg324-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:15 ; elapsed = 00:00:24 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:24 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'current_state_reg' in module 'Controller_Interface'
 INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'collision_detection'
@@ -170,7 +177,7 @@ INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'current_state_reg' using encoding 'one-hot' in module 'Score_Display'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:16 ; elapsed = 00:00:27 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:16 ; elapsed = 00:00:20 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -234,26 +241,26 @@ Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:28 ; elapsed = 00:00:43 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:28 ; elapsed = 00:00:33 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:34 ; elapsed = 00:00:49 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:33 ; elapsed = 00:00:39 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:37 ; elapsed = 00:00:52 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Timing Optimization : Time (s): cpu = 00:00:37 ; elapsed = 00:00:43 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-3332] Sequential element (score_display_inst/FSM_onehot_next_state_reg[1]) is unused and will be removed from module pong_top.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:38 ; elapsed = 00:00:53 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Technology Mapping : Time (s): cpu = 00:00:37 ; elapsed = 00:00:43 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -271,37 +278,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:43 ; elapsed = 00:00:58 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished IO Insertion : Time (s): cpu = 00:00:42 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:43 ; elapsed = 00:00:58 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:42 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:43 ; elapsed = 00:00:58 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:43 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:43 ; elapsed = 00:00:58 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:43 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:43 ; elapsed = 00:00:59 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:43 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:43 ; elapsed = 00:00:59 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:43 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -319,11 +326,11 @@ Report Cell Usage:
 +------+-------+------+
 |1     |BUFG   |     1|
 |2     |CARRY4 |   203|
-|3     |LUT1   |   201|
-|4     |LUT2   |   212|
-|5     |LUT3   |    82|
-|6     |LUT4   |   480|
-|7     |LUT5   |   143|
+|3     |LUT1   |   209|
+|4     |LUT2   |   216|
+|5     |LUT3   |    80|
+|6     |LUT4   |   479|
+|7     |LUT5   |   146|
 |8     |LUT6   |   185|
 |9     |MUXF7  |     1|
 |10    |FDCE   |   150|
@@ -333,27 +340,27 @@ Report Cell Usage:
 |14    |OBUF   |    24|
 +------+-------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:43 ; elapsed = 00:00:59 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:43 ; elapsed = 00:00:48 . Memory (MB): peak = 1607.305 ; gain = 670.562
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:34 ; elapsed = 00:00:55 . Memory (MB): peak = 1615.219 ; gain = 565.254
-Synthesis Optimization Complete : Time (s): cpu = 00:00:43 ; elapsed = 00:00:59 . Memory (MB): peak = 1615.219 ; gain = 681.680
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:34 ; elapsed = 00:00:46 . Memory (MB): peak = 1607.305 ; gain = 566.656
+Synthesis Optimization Complete : Time (s): cpu = 00:00:43 ; elapsed = 00:00:49 . Memory (MB): peak = 1607.305 ; gain = 670.562
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.033 . Memory (MB): peak = 1615.219 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.033 . Memory (MB): peak = 1607.305 ; gain = 0.000
 INFO: [Netlist 29-17] Analyzing 204 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1615.219 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1607.305 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Synth Design complete | Checksum: 9cc0e8fe
+Synth Design complete | Checksum: 2fe67554
 INFO: [Common 17-83] Releasing license: Synthesis
-46 Infos, 3 Warnings, 0 Critical Warnings and 0 Errors encountered.
+52 Infos, 3 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:50 ; elapsed = 00:01:09 . Memory (MB): peak = 1615.219 ; gain = 1100.344
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.136 . Memory (MB): peak = 1615.219 ; gain = 0.000
-INFO: [Common 17-1381] The checkpoint 'F:/Studium/VHDL/Modulabschlussprojekt/vhdl_Pong/project_1/project_1.runs/synth_1/pong_top.dcp' has been generated.
+synth_design: Time (s): cpu = 00:00:48 ; elapsed = 00:00:55 . Memory (MB): peak = 1607.305 ; gain = 1089.887
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.137 . Memory (MB): peak = 1607.305 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'F:/Studium/VHDL/ModulABprojekt/project_1/project_1.runs/synth_1/pong_top.dcp' has been generated.
 INFO: [Vivado 12-24828] Executing command : report_utilization -file pong_top_utilization_synth.rpt -pb pong_top_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Sep 19 23:26:03 2024...
+INFO: [Common 17-206] Exiting Vivado at Tue Sep 24 01:21:58 2024...
