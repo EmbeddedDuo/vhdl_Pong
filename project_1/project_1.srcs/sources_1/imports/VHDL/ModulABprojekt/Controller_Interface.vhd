@@ -49,12 +49,14 @@ ARCHITECTURE Behavioral OF Controller_Interface IS
     TYPE state_type IS (s00, s01, s11, s10);
     SIGNAL current_state : state_type := s00;
     SIGNAL next_state : state_type;
-    SIGNAL prev_state : state_type := s00;
     SIGNAL a : STD_LOGIC := '0';
     SIGNAL b : STD_LOGIC := '0';
+    
+    SIGNAL step_count : INTEGER range -4 to +4 := 0;
+    SIGNAL next_step_count : INTEGER range -4 to +4 := 0; -- Neues Signal
 
 BEGIN
-    -- debounced value for rotation encoder
+    -- Debounced value for rotation encoder
     g_debounce_signals : FOR i IN 0 TO rot_enc_i'length - 1 GENERATE
         debounce_signal : ENTITY work.Rotation_Encoder_Debounced
             GENERIC MAP(
@@ -69,7 +71,7 @@ BEGIN
             );
     END GENERATE;
 
-    -- debounced value for the button (sw)
+    -- Debounced value for the button (sw)
     debounce_signal : ENTITY work.Rotation_Encoder_Debounced
         GENERIC MAP(
             clk_frequency_in_Hz => clk_frequency_in_Hz,
@@ -82,6 +84,7 @@ BEGIN
             debounce => push_but_s
         );
 
+    -- Synchronisation der Eingangssignale
     sync : PROCESS (clock_i)
     BEGIN
         IF rising_edge(clock_i) THEN
@@ -89,73 +92,86 @@ BEGIN
             b <= debounceoutput_a_b(1);
         END IF;
     END PROCESS;
+
+    -- Kombinatorischer Prozess f�r Zustands�berg�nge
     zuef_p : PROCESS (current_state, a, b)
+        VARIABLE temp_next_step_count : INTEGER range -4 to +4;
     BEGIN
+        -- Initialisierung der Variablen
+        temp_next_step_count := step_count;
+
         CASE current_state IS
             WHEN s00 =>
                 IF a = '1' THEN
                     next_state <= s01;
+                    temp_next_step_count := temp_next_step_count + 1;
                 ELSIF b = '1' THEN
                     next_state <= s10;
+                    temp_next_step_count := temp_next_step_count - 1;
                 ELSE
                     next_state <= current_state;
                 END IF;
             WHEN s01 =>
                 IF a = '0' THEN
                     next_state <= s00;
+                    temp_next_step_count := temp_next_step_count - 1;
                 ELSIF b = '1' THEN
                     next_state <= s11;
+                    temp_next_step_count := temp_next_step_count + 1;
                 ELSE
                     next_state <= current_state;
                 END IF;
             WHEN s11 =>
                 IF a = '0' THEN
                     next_state <= s10;
+                    temp_next_step_count := temp_next_step_count + 1;
                 ELSIF b = '0' THEN
                     next_state <= s01;
+                    temp_next_step_count := temp_next_step_count - 1;
                 ELSE
                     next_state <= current_state;
                 END IF;
             WHEN s10 =>
                 IF a = '1' THEN
                     next_state <= s11;
+                    temp_next_step_count := temp_next_step_count - 1;
                 ELSIF b = '0' THEN
                     next_state <= s00;
+                    temp_next_step_count := temp_next_step_count + 1;
                 ELSE
                     next_state <= current_state;
                 END IF;
             WHEN OTHERS =>
                 next_state <= s00;
         END CASE;
+
+        -- Zuweisung des n�chsten Schrittz�hlers
+        next_step_count <= temp_next_step_count;
     END PROCESS;
 
+    -- Getakteter Prozess f�r Zustandsaktualisierung und Position
     speicher_p : PROCESS (clock_i)
     BEGIN
         IF rising_edge(clock_i) THEN
-            prev_state <= current_state;
             current_state <= next_state;
-        END IF;
-    END PROCESS;
+            step_count <= next_step_count;
 
-    af_p : PROCESS (current_state, prev_state, pos_i, clock_i)
-    BEGIN
-
-        IF rising_edge(clock_i) THEN
-            IF current_state = s00 THEN
-                IF prev_state = s10 AND pos_i < (screen_height - (racket_height) + 5 ) THEN
+            -- Positionsaktualisierung basierend auf Schrittz�hler
+            IF step_count = 4 THEN
+                IF pos_i < (screen_height - racket_height) THEN
                     pos_i <= pos_i + racket_steps;
-                ELSIF prev_state = s01 AND pos_i > 0 THEN
-                    pos_i <= pos_i - racket_steps;
-                ELSE
-                    pos_i <= pos_i;
                 END IF;
-            ELSE
-                pos_i <= pos_i;
+                step_count <= 0;
+            ELSIF step_count = -4 THEN
+                IF pos_i > 0 THEN
+                    pos_i <= pos_i - racket_steps;
+                END IF;
+                step_count <= 0;
             END IF;
 
+            -- Aktualisieren der Ausgabe
             racket_y_pos_o <= STD_LOGIC_VECTOR(to_signed(pos_i, 10));
         END IF;
-
     END PROCESS;
 
     push_but_deb_o <= NOT push_but_s;
