@@ -14,25 +14,13 @@
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments:
--- 
+-- Additional Comments: Dieses Modul wird verwendet um das Eingangssignal zu entprellen.
+-- dies wird verwendet für Entprellung von den Ausgangssignale a, b und dem Button vom Drehimpulsgeber
 ----------------------------------------------------------------------------------
 
 
 library IEEE; 
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
--- Dieses Modul wird verwendet um den Eingangssignal zu entprellen.
--- dies wird verwendet für Entprellung von den Ausgangssignale a, b und dem Button vom Drehimpulsgeber
 
 entity Rotation_Encoder_Debounced is
     Generic (
@@ -65,10 +53,10 @@ begin
     end process;
 
     -- hier wird der Zähler entsprechend dem Eingangssignal dekrementiert oder Inkrementiert. 
-    -- Erreicht er die maximal Zählwert oder bleibt er 0, so wird entsprechend das Ausgangssignal gesetzt. 
+    -- Erreicht er den maximalen Zählwert oder bleibt er 0, so wird entsprechend das Ausgangssignal gesetzt. 
     debounce_process: process(clk, rst,sync_in) -- 
     begin
-        if rst = '1' then  --zurücksetzung der Zähler bei reset
+        if rst = '1' then  --Zurücksetzung der Zähler bei reset
             counter <= 0;   
         end if;
         if rising_edge(clk) then
