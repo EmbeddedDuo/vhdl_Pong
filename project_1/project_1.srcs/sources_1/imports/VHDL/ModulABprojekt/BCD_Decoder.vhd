@@ -14,7 +14,7 @@
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments:
+-- Additional Comments: Modul für die Decodierung 4 Bit Zahlen in 7 bit Vektoren für das Ansteuern der LEDs vom Display
 -- 
 ----------------------------------------------------------------------------------
 
@@ -41,6 +41,11 @@ end BCD_Decoder;
 architecture Behavioral of BCD_Decoder is
 
 begin
+    -- Prozess um 4 Bit Zahl in 7 bit vector umzuwandeln
+    -- Hier bedeutet die 1 welche LED Segmente NICHT aufleuchten sollen, da Active low
+    -- Um einzelne Zahlen darzustellen: https://www.geeksforgeeks.org/bcd-to-7-segment-decoder/
+    -- Im Top Level Modul wird der Output verneint, dadurch müssen wir hier auch verneinen damit die Logik erhalten bleibt
+    -- Das Modul stammt aus den bereits abgearbeiteten Übungsaufgaben und not zu setzen war Zeit sparender
     process(bcd_in)
     begin
         case bcd_in is
@@ -64,6 +69,7 @@ begin
         segment_out <= not "0000000";
         when "1001" =>
         segment_out <= not "0000100";
+        -- Die Zahl 10 wird hier als Trennzeichen genutzt 
         when "1010" =>
         segment_out <= not "1111110";
         when others =>

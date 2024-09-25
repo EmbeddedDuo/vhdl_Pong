@@ -17,46 +17,53 @@
 -- Additional Comments:
 --
 ----------------------------------------------------------------------------------
+
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 
+
+-- Dieses Modul scheint dafür entwickelt worden, um die Position eines Schlägers zu steuern, 
+-- basierend auf Eingaben von einem Drehimpulsgebers.
+
 ENTITY Controller_Interface IS
     GENERIC (
-        clk_frequency_in_Hz : INTEGER := 125_000_000;
-        racket_steps : INTEGER := 5;
-        debounce_time_in_us : INTEGER := 2000;
-        racket_height : INTEGER := 30;
-        screen_height : INTEGER := 480
+        clk_frequency_in_Hz : INTEGER := 125_000_000; -- takt_frequenz
+        racket_steps : INTEGER := 5;  -- Schritte für Bewegung für den Schläger (bzw. wie viel Pixeln)
+        debounce_time_in_us : INTEGER := 2000;  -- Entprellzeit in Mikrosekunden 
+        racket_height : INTEGER := 30;   -- die größe der Schläger (Pixel)
+        screen_height : INTEGER := 480  -- die Größe der Bildschilm (Pixel)
     );
     PORT (
-        clock_i : IN STD_LOGIC;
-        reset_i : IN STD_LOGIC;
-        rot_enc_i : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
-        push_but_i : IN STD_LOGIC;
-        push_but_deb_o : OUT STD_LOGIC;
-        racket_y_pos_o : OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
+        clock_i : IN STD_LOGIC; -- Takteingang
+        reset_i : IN STD_LOGIC;  -- reseteingang
+        rot_enc_i : IN STD_LOGIC_VECTOR (1 DOWNTO 0);  -- Eingang von Drehimplusgebr (A und B)
+        push_but_i : IN STD_LOGIC;  -- Signal vom dem Druckknopf des Drehimpulsgeber
+        push_but_deb_o : OUT STD_LOGIC;   -- Entprellter Ausgangsignal des Druckknopf
+        racket_y_pos_o : OUT STD_LOGIC_VECTOR (9 DOWNTO 0) -- Ausgang für die Position des Schlägers.
 
     );
 END Controller_Interface;
 
 ARCHITECTURE Behavioral OF Controller_Interface IS
 
-    SIGNAL debounceoutput_a_b : STD_LOGIC_VECTOR (1 DOWNTO 0);
-    SIGNAL pos_i : INTEGER := (screen_height - racket_height)/2 ;
-    SIGNAL push_but_s : STD_LOGIC := '1';
+    SIGNAL debounceoutput_a_b : STD_LOGIC_VECTOR (1 DOWNTO 0); -- Signal für die Entprellte Eingangssignale (A und B) 
+    SIGNAL pos_i : INTEGER := (screen_height - racket_height)/2 ; -- Position des Schlägers (fängt in der Mitte an)
+    SIGNAL push_but_s : STD_LOGIC := '1'; -- - Signal für die Entprellte Eingangssignal (Druckknopf) 
 
-    TYPE state_type IS (s00, s01, s11, s10);
-    SIGNAL current_state : state_type := s00;
+    TYPE state_type IS (s00, s01, s11, s10); -- die Zustände der Zustandsmaschine
+    -- Aktueller und nächster Zustand
+    SIGNAL current_state : state_type := s00;  
     SIGNAL next_state : state_type;
-    SIGNAL a : STD_LOGIC := '0';
-    SIGNAL b : STD_LOGIC := '0';
+    SIGNAL a : STD_LOGIC := '0'; -- Singal für die Synchronisierung 
+    SIGNAL b : STD_LOGIC := '0'; -- Singal für die Synchronisierung 
     
+    -- Schrittzähler für die Drehung des Encoder
     SIGNAL step_count : INTEGER range -4 to +4 := 0;
-    SIGNAL next_step_count : INTEGER range -4 to +4 := 0; -- Neues Signal
+    SIGNAL next_step_count : INTEGER range -4 to +4 := 0;
 
 BEGIN
-    -- Debounced value for rotation encoder
+    -- Nutzen den Debouncer für die Entprellung bei Eingangssingal (A und B)
     g_debounce_signals : FOR i IN 0 TO rot_enc_i'length - 1 GENERATE
         debounce_signal : ENTITY work.Rotation_Encoder_Debounced
             GENERIC MAP(
@@ -71,7 +78,7 @@ BEGIN
             );
     END GENERATE;
 
-    -- Debounced value for the button (sw)
+    -- Nutzen den Debouncer für die Entprellung bei Eingangssingal (Durckknopf)
     debounce_signal : ENTITY work.Rotation_Encoder_Debounced
         GENERIC MAP(
             clk_frequency_in_Hz => clk_frequency_in_Hz,
@@ -93,11 +100,14 @@ BEGIN
         END IF;
     END PROCESS;
 
-    -- Kombinatorischer Prozess f�r Zustands�berg�nge
+    -- Prozess für der Zustandsübergangsfunktion
+    -- Hier werden die Zustandübergänge für den Drehencoder festgelegt. 
+    -- Und mit Jedem neuzuweiseung für den Nextstate, wird der Zähler entsprechend inkrementiert und dekrementiert, sont erkennen wir die Richtung. 
+    --     s00, s01, s11, s10: Repräsentieren die vier möglichen Kombinationen der Signale a und b.
     zuef_p : PROCESS (current_state, a, b)
         VARIABLE temp_next_step_count : INTEGER range -4 to +4;
     BEGIN
-        -- Initialisierung der Variablen
+    
         temp_next_step_count := step_count;
 
         CASE current_state IS
@@ -145,19 +155,19 @@ BEGIN
                 next_state <= s00;
         END CASE;
 
-        -- Zuweisung des n�chsten Schrittz�hlers
         next_step_count <= temp_next_step_count;
     END PROCESS;
 
-    -- Getakteter Prozess f�r Zustandsaktualisierung und Position
+    -- Prozess für die Speicherung  und der Ausgangsfunktion
+    -- Aktualisiert den aktuellen Zustand und die Position des Schlägers 
     speicher_p : PROCESS (clock_i)
     BEGIN
         IF rising_edge(clock_i) THEN
             current_state <= next_state;
             step_count <= next_step_count;
 
-            -- Positionsaktualisierung basierend auf Schrittz�hler
-            IF step_count = 4 THEN
+            -- Positionsaktualisierung basierend auf Schrittzähler
+            IF step_count = 4 THEN            
                 IF pos_i < (screen_height - racket_height) THEN
                     pos_i <= pos_i + racket_steps;
                 END IF;
@@ -169,7 +179,7 @@ BEGIN
                 step_count <= 0;
             END IF;
 
-            -- Aktualisieren der Ausgabe
+            -- Positionsausgabe
             racket_y_pos_o <= STD_LOGIC_VECTOR(to_signed(pos_i, 10));
         END IF;
     END PROCESS;
